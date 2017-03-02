@@ -30,13 +30,15 @@ def main():
         2.get api_token
         3.post to slack
     """
+    import bot
     # parse commandline arguments
     argparser = make_argparser()
     argument = argparser.parse_args()
     # get api token
     api_token = argument.APITOKEN
     slack = slacker.Slacker(api_token)
-    channel_id = get_channel(slack, argument.channel)
-    slack.chat.post_message(channel_id, 'Hello!', as_user=True)
+    mybot = bot.Bot(slack)
+    channel_name = get_channel(slack, argument.channel)
+    mybot.post_message('Hello!', channel=channel_name, dest_user='rokusan63')
 if __name__ == "__main__":
     main()
