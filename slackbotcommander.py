@@ -15,8 +15,8 @@ def make_argparser():
         ってだけです
     """
     parser = argparse.ArgumentParser()
-    parser.add_argument("--channel", help='channel to post message')
-    parser.add_argument("APITOKEN", default="random", help='api token for slack bot/integration you use')
+    parser.add_argument("--channel", "-c", default="bot_dev", help='channel to post message')
+    parser.add_argument("APITOKEN", type=str, help='api token for slack bot/integration you use')
     return parser
 def get_channel(slack: slacker.Slacker, channel_name: str):
     """get the channel_name for integration
@@ -32,11 +32,11 @@ def main():
     """
     # parse commandline arguments
     argparser = make_argparser()
-    argument = argparser.parse_args(sys.argv)
+    argument = argparser.parse_args(sys.argv[1:])
     # get api token
     api_token = argument.APITOKEN
     slack = slacker.Slacker(api_token)
-    channel_id = get_channel(slack, argument.channel_name)
-    slack.chat.post_message(channel_id, 'Hello!')
+    channel_id = get_channel(slack, argument.channel)
+    slack.chat.post_message(channel_id, 'Hello!', as_user=True)
 if __name__ == "__main__":
     main()
