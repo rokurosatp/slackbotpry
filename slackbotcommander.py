@@ -32,7 +32,7 @@ def main():
     """
     # parse commandline arguments
     argparser = make_argparser()
-    argument = argparser.parse_args(sys.argv[1:])
+    argument = argparser.parse_args()
     # get api token
     api_token = argument.APITOKEN
     slack = slacker.Slacker(api_token)
