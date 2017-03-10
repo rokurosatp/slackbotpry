@@ -1,7 +1,7 @@
-import slacker
+from slackclient import SlackClient
 
 class Bot:
-    def __init__(self, slack: slacker.Slacker):
+    def __init__(self, slack: SlackClient):
         self.api = slack
         self.cur_channel = 'bot_dev'
         # 今後デフォルトで設定するかもしれないところ API じゃできないっぽい
@@ -17,9 +17,8 @@ class Bot:
         if dest_user is None:
             text = message
         else:
-            user_id = self.api.users.get_user_id(dest_user)
-            text = '<@{0}> {1}'.format(user_id, message)
+            text = '@{0} {1}'.format(dest_user, message)
         if channel is None:
-            self.api.chat.post_message(self.cur_channel, text, as_user=True)
+            result =self.api.api_call('chat.postMessage', text=text, link_names=True, channel=self.cur_channel, as_user=True)
         else:
-            self.api.chat.post_message(channel, text, as_user=True)
+            result =self.api.api_call('chat.postMessage', text=text, link_names=True, channel=channel, as_user=True)

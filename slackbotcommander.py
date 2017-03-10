@@ -3,7 +3,7 @@
 """
 import sys
 import argparse
-import slacker
+from slackclient import SlackClient
 
 def make_argparser():
     """Create Command Line Parser
@@ -18,7 +18,7 @@ def make_argparser():
     parser.add_argument("--channel", "-c", default="bot_dev", help='channel to post message')
     parser.add_argument("APITOKEN", type=str, help='api token for slack bot/integration you use')
     return parser
-def get_channel(slack: slacker.Slacker, channel_name: str):
+def get_channel(slack: SlackClient, channel_name: str):
     """get the channel_name for integration
     NOTE:一応DMや自分DM等の対応のための余地として作っといた
     """
@@ -36,7 +36,7 @@ def main():
     argument = argparser.parse_args()
     # get api token
     api_token = argument.APITOKEN
-    slack = slacker.Slacker(api_token)
+    slack = SlackClient(token=api_token)
     mybot = bot.Bot(slack)
     channel_name = get_channel(slack, argument.channel)
     mybot.post_message('Hello!', channel=channel_name, dest_user='rokusan63')
