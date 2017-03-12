@@ -11,7 +11,7 @@ def make_argparser():
         This function creates ArgumentParser Object and make arguments for this app.
     NOTE:
         今後の拡張性のためにArgumentParserオブジェクトでコマンドラインのパースをしていますが今のところ
-        python slackbotcommander APITOKEN
+        python slackbotpry APITOKEN
         ってだけです
     """
     parser = argparse.ArgumentParser()
