@@ -15,7 +15,7 @@ def make_argparser():
         ってだけです
     """
     parser = argparse.ArgumentParser()
-    parser.add_argument("--channel", "-c", default="bot_dev", help='channel to post message')
+    parser.add_argument("--channel", "-c", default="random", help='channel to post message')
     parser.add_argument("APITOKEN", type=str, help='api token for slack bot/integration you use')
     return parser
 def get_channel(slack: SlackClient, channel_name: str):

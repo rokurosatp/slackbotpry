@@ -3,7 +3,7 @@ from slackclient import SlackClient
 class Bot:
     def __init__(self, slack: SlackClient):
         self.api = slack
-        self.cur_channel = 'bot_dev'
+        self.cur_channel = 'random'
         # 今後デフォルトで設定するかもしれないところ API じゃできないっぽい
         self.owner = ''
         self.user_dm = ''
