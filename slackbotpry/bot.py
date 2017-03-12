@@ -19,6 +19,6 @@ class Bot:
         else:
             text = '@{0} {1}'.format(dest_user, message)
         if channel is None:
-            result =self.api.api_call('chat.postMessage', text=text, link_names=True, channel=self.cur_channel, as_user=True)
-        else:
-            result =self.api.api_call('chat.postMessage', text=text, link_names=True, channel=channel, as_user=True)
+            channel = self.cur_channel
+        result = self.api.api_call('chat.postMessage', text=text, link_names=True, channel=channel, as_user=True)
+        return result

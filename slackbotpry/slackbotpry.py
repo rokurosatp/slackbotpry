@@ -39,6 +39,8 @@ def main():
     slack = SlackClient(token=api_token)
     mybot = bot.Bot(slack)
     channel_name = get_channel(slack, argument.channel)
-    mybot.post_message('Hello!', channel=channel_name, dest_user='rokusan63')
+    result = mybot.post_message('Hello!', channel=channel_name)
+    if result['ok'] is False:
+        print('Error :', result['error'])
 if __name__ == "__main__":
     main()
