@@ -16,6 +16,8 @@ class Bot:
                     self.on_event(event)
                 sleep(1)
     def on_event(self, event):
+        if 'bot_id' in event:
+            return
         if event['type'] == 'message':
             self.post_message('Huh?')
     def post_message(self, message, channel=None, dest_user=None):
