@@ -1,12 +1,23 @@
 from slackclient import SlackClient
+from time import sleep
 
 class Bot:
-    def __init__(self, slack: SlackClient):
+    def __init__(self, slack: SlackClient, default_channel='random'):
         self.api = slack
-        self.cur_channel = 'random'
+        self.cur_channel = default_channel
         # 今後デフォルトで設定するかもしれないところ API じゃできないっぽい
         self.owner = ''
         self.user_dm = ''
+    def mainloop(self):
+        if self.api.rtm_connect():
+            while True:
+                events = self.api.rtm_read()
+                for event in events:
+                    self.on_event(event)
+                sleep(1)
+    def on_event(self, event):
+        if event['type'] == 'message':
+            self.post_message('Huh?')
     def post_message(self, message, channel=None, dest_user=None):
         """Post a Message
         Description:
