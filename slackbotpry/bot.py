@@ -8,6 +8,9 @@ class Bot:
         # 今後デフォルトで設定するかもしれないところ API じゃできないっぽい
         self.owner = ''
         self.user_dm = ''
+        self.handlers = []
+    def add_eventhandler(self, handler):
+        self.handlers.append(handler)
     def mainloop(self):
         if self.api.rtm_connect():
             while True:
@@ -18,8 +21,9 @@ class Bot:
     def on_event(self, event):
         if 'bot_id' in event:
             return
-        if event['type'] == 'message':
-            self.post_message('Huh?')
+        for handler in self.handlers:
+            if handler.filter(event):
+                handler.on_event(self, event)
     def post_message(self, message, channel=None, dest_user=None):
         """Post a Message
         Description:
