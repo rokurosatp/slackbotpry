@@ -38,13 +38,9 @@ def main():
     api_token = argument.APITOKEN
     slack = SlackClient(token=api_token)
     mybot = bot.Bot(slack, argument.channel)
-    from eventhandler import EventHandler
-    class TestEventHandler(EventHandler):
-        def filter(self, event):
-            return event['type'] == 'message'
-        def on_event(self, bot, event):
-            mybot.post_message('Huh?')
-    mybot.add_eventhandler(TestEventHandler())
+    from eventhandler import SimpleMessageHandler
+    callback = lambda bot, text : bot.post_message('Hi')
+    mybot.add_eventhandler(SimpleMessageHandler(r'^Hello$', callback))
     mybot.mainloop()
 if __name__ == "__main__":
     main()
