@@ -1,5 +1,5 @@
 """Main Module
-起動したら投稿して終了する。
+Slack RTM APIのイベント処理により動作するbotを起動する
 """
 import sys
 import argparse
