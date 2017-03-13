@@ -11,5 +11,5 @@ Type API Token of your bot as argument.
 Channel name is optional (default bot_dev)
 
 ```
-  python3 slackbotcommander.py -c channel API_TOKEN
+  python3 slackbotpry.py API_TOKEN -c channel
 ```
