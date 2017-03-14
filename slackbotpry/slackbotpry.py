@@ -36,8 +36,7 @@ def main():
     argument = argparser.parse_args()
     # get api token
     api_token = argument.APITOKEN
-    slack = SlackClient(token=api_token)
-    mybot = bot.Bot(slack, argument.channel)
+    mybot = bot.Bot(api_token, argument.channel)
     from eventhandler import SimpleMessageHandler
     callback = lambda bot, text : bot.post_message('Hi')
     mybot.add_eventhandler(SimpleMessageHandler(r'^Hello$', callback))

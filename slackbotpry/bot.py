@@ -2,8 +2,8 @@ from slackclient import SlackClient
 from time import sleep
 
 class Bot:
-    def __init__(self, slack: SlackClient, default_channel='random'):
-        self.api = slack
+    def __init__(self, api_token, default_channel='random'):
+        self.api = SlackClient(token=api_token)
         self.cur_channel = default_channel
         # 今後デフォルトで設定するかもしれないところ API じゃできないっぽい
         self.owner = ''
