@@ -1,5 +1,4 @@
 from slackclient import SlackClient
-from multiprocessing.pool import Pool
 from time import sleep
 from . import eventpool
 
@@ -36,6 +35,7 @@ class Bot:
         Arguments:
             message (str): message to post
         """
+        print("post message")
         if dest_user is None:
             text = message
         else:

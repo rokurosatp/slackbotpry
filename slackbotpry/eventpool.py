@@ -1,6 +1,6 @@
 """Pooling Process To Handle Event
 """
-import multiprocessing as mp
+import threading as th
 import queue
 
 class EventPoolRecord:
@@ -11,9 +11,8 @@ class EventPoolRecord:
         self.event = event
 class EventPool:
     def __init__(self):
-        self.processes = [] # id付きのプロセス
-        self.ctx = mp.get_context('spawn')
-        self.queue = self.ctx.Queue()
+        self.threads = [] # id付きのプロセス
+        self.queue = queue.Queue()
         self.run_count = 0
     @staticmethod
     def do_handler(record, queue):
@@ -23,6 +22,9 @@ class EventPool:
         try:
             #self.queue.put(record)
             record.handler.on_event(record.bot, record.event)
+        except Exception as e:
+            print(str(e))
+            raise
         finally:
             queue.put(exec_id)
     def check_queue(self):
@@ -33,23 +35,23 @@ class EventPool:
                 exec_id = self.queue.get_nowait()
             except queue.Empty:
                 break
-            for item in filter(lambda item: item[0] == exec_id, self.processes):
+            for item in filter(lambda item: item[0] == exec_id, self.threads):
                 item[1].join()
-                self.processes.remove(item)
+                self.threads.remove(item)
     def kill(self):
         """全プロセスを正常終了,あるいは強制終了させる
         """
-        for item in self.processes:
+        for item in self.threads:
             if item[1].join(0.5) is not None:
-                self.processes.remove(item)
-        for item in self.processes:
-            item[1].terminate()
-            self.processes.remove(item)
+                self.threads.remove(item)
+        for item in self.threads:
+            #item[1].terminate()
+            self.threads.remove(item)
     def register(self, record: EventPoolRecord):
         """実行プロセスを登録
         """
         record.id = self.run_count
         self.run_count += 1
-        process = mp.Process(target=EventPool.do_handler, args=(record, self.queue))
-        self.processes.append((record.id, process))
-        process.start()
+        thread = th.Thread(target=EventPool.do_handler, args=(record, self.queue), daemon=True)
+        self.threads.append((record.id, thread))
+        thread.start()
