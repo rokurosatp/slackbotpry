@@ -24,14 +24,14 @@ def main():
         2.get api_token
         3.post to slack
     """
-    import bot
+    from . import bot
     # parse commandline arguments
     argparser = make_argparser()
     argument = argparser.parse_args()
     # get api token
     api_token = argument.APITOKEN
     mybot = bot.Bot(api_token, argument.channel)
-    from eventhandler import SimpleMessageHandler
+    from .eventhandler import SimpleMessageHandler
     callback = lambda bot, text : bot.post_message('Hi')
     mybot.add_eventhandler(SimpleMessageHandler(r'^Hello$', callback))
     mybot.mainloop()
