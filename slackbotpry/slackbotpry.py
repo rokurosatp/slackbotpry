@@ -3,7 +3,6 @@ Slack RTM APIのイベント処理により動作するbotを起動する
 """
 import sys
 import argparse
-from slackclient import SlackClient
 
 def make_argparser():
     """Create Command Line Parser
@@ -18,11 +17,6 @@ def make_argparser():
     parser.add_argument("--channel", "-c", default="random", help='channel to post message')
     parser.add_argument("APITOKEN", type=str, help='api token for slack bot/integration you use')
     return parser
-def get_channel(slack: SlackClient, channel_name: str):
-    """get the channel_name for integration
-    NOTE:一応DMや自分DM等の対応のための余地として作っといた
-    """
-    return channel_name
 def main():
     """Main Routine
     PROCESS:
