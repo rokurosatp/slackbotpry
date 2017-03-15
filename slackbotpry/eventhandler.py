@@ -10,8 +10,7 @@ class EventHandler:
         self.event_queue = Queue()
     def start(self):
         assert self.inner_thread is None
-        thread = Thread(target=self.loop)
-        thread.setDaemon(True)
+        thread = Thread(target=self.loop, daemon=True)
         thread.start()
         self.inner_thread = thread
     def loop(self):
