@@ -19,9 +19,9 @@ class EventHandler:
             event = self.event_queue.get()
             self.on_event(event)
     def put_event(self, event):
-        if self.filter(event):
+        if self.accept(event):
             self.event_queue.put(event)
-    def filter(self, event):
+    def accept(self, event):
         raise NotImplementedError()
     def on_event(self, event):
         raise NotImplementedError()
@@ -29,7 +29,7 @@ class EventHandler:
 class MessageHandler(EventHandler):
     def __init__(self, bot):
         EventHandler.__init__(self, bot)
-    def filter(self, event):
+    def accept(self, event):
         return event['type'] == 'message' and 'text' in event
 
 class SimpleMessageHandler(MessageHandler):
@@ -37,7 +37,7 @@ class SimpleMessageHandler(MessageHandler):
         MessageHandler.__init__(self, bot)
         self.matcher = re.compile(regex_str)
         self.callback = callback
-    def filter(self, event):
-        return MessageHandler.filter(self, event) and self.matcher.search(event['text'])
+    def accept(self, event):
+        return MessageHandler.accept(self, event) and self.matcher.search(event['text'])
     def on_event(self, event):
         self.callback(self.bot, event['text'])

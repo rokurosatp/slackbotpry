@@ -27,7 +27,7 @@ class Bot:
             return
         for handler in self.handlers:
             handler.put_event(event)
-#            if handler.filter(event):
+#            if handler.accept(event):
 #                record = eventpool.EventPoolRecord(handler, self, event)
 #                self.pool.register(record)
     def post_message(self, message, channel=None, dest_user=None):
