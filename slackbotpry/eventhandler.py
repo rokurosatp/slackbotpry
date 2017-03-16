@@ -17,6 +17,7 @@ class EventHandler:
         while True:
             event = self.event_queue.get()
             self.on_event(event)
+            self.event_queue.task_done()
     def put_event(self, event):
         if self.accept(event):
             self.event_queue.put(event)
