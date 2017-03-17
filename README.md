@@ -1,4 +1,4 @@
-# slackbotcommander
+# slackbotpry
 
 
 ## Usage
