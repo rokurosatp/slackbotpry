@@ -90,3 +90,7 @@ ENV/
 
 # ctags tag file
 tags
+
+# eclipse
+.project
+.pydevproject
