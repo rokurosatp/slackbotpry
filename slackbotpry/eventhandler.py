@@ -3,9 +3,17 @@ from time import sleep
 from queue import Queue
 import re
 
-class EventHandler:
-    def __init__(self, bot):
+class Event:
+    def __init__(self, bot, data):
         self.bot = bot
+        self.data = data
+    def post_message(self, text, channel=None):
+        if channel is None:
+            channel = self.data['channel']
+        self.bot.post_message(text, channel)
+
+class EventHandler:
+    def __init__(self):
         self.inner_thread = None
         self.event_queue = Queue()
     def start(self):
@@ -27,17 +35,17 @@ class EventHandler:
         raise NotImplementedError()
 
 class MessageHandler(EventHandler):
-    def __init__(self, bot):
-        EventHandler.__init__(self, bot)
+    def __init__(self):
+        EventHandler.__init__(self)
     def accept(self, event):
-        return event['type'] == 'message' and 'text' in event
+        return event.data['type'] == 'message' and 'text' in event.data
 
 class SimpleMessageHandler(MessageHandler):
-    def __init__(self, bot, regex_str, callback):
-        MessageHandler.__init__(self, bot)
+    def __init__(self, regex_str, callback):
+        MessageHandler.__init__(self)
         self.matcher = re.compile(regex_str)
         self.callback = callback
     def accept(self, event):
-        return MessageHandler.accept(self, event) and self.matcher.search(event['text'])
+        return MessageHandler.accept(self, event) and self.matcher.search(event.data['text'])
     def on_event(self, event):
-        self.callback(self.bot, event['text'])
+        self.callback(event, event.data['text'])
