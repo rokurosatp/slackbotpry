@@ -4,10 +4,9 @@ import threading as th
 import queue
 
 class EventPoolRecord:
-    def __init__(self, handler, bot, event):
+    def __init__(self, handler, event):
         self.id = 0  #このオブジェクトだけEventPool内で変更される
         self.handler = handler
-        self.bot = bot
         self.event = event
 class EventPool:
     def __init__(self):
@@ -21,7 +20,7 @@ class EventPool:
         exec_id = record.id
         try:
             #self.queue.put(record)
-            record.handler.on_event(record.bot, record.event)
+            record.handler.on_event(record.event)
         except Exception as e:
             print(str(e))
             raise

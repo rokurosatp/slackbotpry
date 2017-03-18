@@ -1,6 +1,7 @@
 from slackclient import SlackClient
 from time import sleep
 import eventpool
+from eventhandler import Event
 
 class Bot:
     def __init__(self, api_token, default_channel='random'):
@@ -17,18 +18,18 @@ class Bot:
     def mainloop(self):
         if self.api.rtm_connect():
             while True:
-                events = self.api.rtm_read()
-                for event in events:
-                    self.on_event(event)
+                data_list = self.api.rtm_read()
+                for data in data_list:
+                    self.on_event(Event(self, data))
 #                self.pool.check_queue()
                 sleep(1)
     def on_event(self, event):
-        if 'bot_id' in event:
+        if 'bot_id' in event.data:
             return
         for handler in self.handlers:
             handler.put_event(event)
 #            if handler.accept(event):
-#                record = eventpool.EventPoolRecord(handler, self, event)
+#                record = eventpool.EventPoolRecord(handler, event)
 #                self.pool.register(record)
     def post_message(self, message, channel=None, dest_user=None):
         """Post a Message
