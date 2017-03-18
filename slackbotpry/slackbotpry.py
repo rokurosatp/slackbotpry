@@ -33,7 +33,7 @@ def main():
     mybot = bot.Bot(api_token, argument.channel)
     from eventhandler import SimpleMessageHandler
     def callback(event, text):
-        event.bot.post_message('Hi!')
+        event.post_message('Hi!')
     mybot.post_message('Hi')
     mybot.add_eventhandler(SimpleMessageHandler(r'^Hello$', callback))
     mybot.mainloop()
