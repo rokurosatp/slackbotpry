@@ -12,3 +12,9 @@ class Event:
         if timestamp is None:
             timestamp = self.data['ts']
         self.bot.add_reaction(emoji, channel, timestamp)
+    def remove_reaction(self, emoji, channel=None, timestamp=None):
+        if channel is None:
+            channel = self.data['channel']
+        if timestamp is None:
+            timestamp = self.data['ts']
+        self.bot.remove_reaction(emoji, channel, timestamp)

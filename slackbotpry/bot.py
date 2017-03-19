@@ -50,3 +50,6 @@ class Bot:
     def add_reaction(self, emoji, channel, timestamp):
         result = self.api.api_call('reactions.add', name=emoji, channel=channel, timestamp=timestamp)
         return result
+    def remove_reaction(self, emoji, channel, timestamp):
+        result = self.api.api_call('reactions.remove', name=emoji, channel=channel, timestamp=timestamp)
+        return result
