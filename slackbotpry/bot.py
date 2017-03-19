@@ -1,7 +1,7 @@
 from slackclient import SlackClient
 from time import sleep
 import eventpool
-from eventhandler import Event
+from event import Event
 
 class Bot:
     def __init__(self, api_token, default_channel='random'):
