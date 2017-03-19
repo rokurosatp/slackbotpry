@@ -36,6 +36,7 @@ def main():
         event.post_message('Hi!')
     mybot.post_message('Hi')
     mybot.add_eventhandler(SimpleMessageHandler(r'^Hello$', callback))
+    mybot.add_eventhandler(SimpleMessageHandler(r'^good$', (lambda event, text: event.add_reaction('+1'))))
     mybot.mainloop()
 if __name__ == "__main__":
     main()
