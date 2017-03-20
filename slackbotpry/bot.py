@@ -16,13 +16,17 @@ class Bot:
         self.handlers.append(handler)
         handler.start()
     def mainloop(self):
-        if self.api.rtm_connect():
-            while True:
-                data_list = self.api.rtm_read()
-                for data in data_list:
-                    self.on_event(Event(self, data))
-#                self.pool.check_queue()
-                sleep(1)
+        try:
+            if self.api.rtm_connect():
+                while True:
+                    data_list = self.api.rtm_read()
+                    for data in data_list:
+                        self.on_event(Event(self, data))
+#                   self.pool.check_queue()
+                    sleep(1)
+        except KeyboardInterrupt:
+            for handler in self.handlers:
+                handler.event_queue.join()
     def on_event(self, event):
         if 'bot_id' in event.data:
             return
