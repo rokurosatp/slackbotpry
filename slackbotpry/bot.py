@@ -2,6 +2,7 @@ from slackclient import SlackClient
 from time import sleep
 import eventpool
 from event import Event
+from websocket import WebSocketConnectionClosedException
 
 class Bot:
     def __init__(self, api_token, default_channel='random'):
@@ -16,17 +17,27 @@ class Bot:
         self.handlers.append(handler)
         handler.start()
     def mainloop(self):
-        try:
-            if self.api.rtm_connect():
-                while True:
-                    data_list = self.api.rtm_read()
-                    for data in data_list:
-                        self.on_event(Event(self, data))
-#                   self.pool.check_queue()
-                    sleep(1)
-        except KeyboardInterrupt:
-            for handler in self.handlers:
-                handler.event_queue.join()
+        while True:
+            try:
+                if self.api.rtm_connect():
+                    print('connected.')
+                    while True:
+                        data_list = self.api.rtm_read()
+                        for data in data_list:
+                            self.on_event(Event(self, data))
+#                        self.pool.check_queue()
+                        sleep(1)
+                else:
+                    print('connection failed.')
+                    sleep(10)
+            except WebSocketConnectionClosedException:
+                print('reconnecting...')
+                continue
+            except KeyboardInterrupt:
+                print('shutting down')
+                break
+        for handler in self.handlers:
+            handler.event_queue.join()
     def on_event(self, event):
         if 'bot_id' in event.data:
             return
