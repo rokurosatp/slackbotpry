@@ -36,7 +36,10 @@ class SimpleMessageHandler(MessageHandler):
         MessageHandler.__init__(self)
         self.matcher = re.compile(regex_str)
         self.callback = callback
+        self.last_post = None
     def accept(self, event):
         return MessageHandler.accept(self, event) and self.matcher.search(event.data['text'])
     def on_event(self, event):
-        self.callback(event, event.data['text'])
+        message = self.callback(event, event.data['text'])
+        if message:
+            self.last_post = event.post_message(message)
