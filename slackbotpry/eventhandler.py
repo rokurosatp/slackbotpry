@@ -30,22 +30,39 @@ class MessageHandler(EventHandler):
         EventHandler.__init__(self)
         self.last_post = None
     def accept(self, event):
-        return event.data['type'] == 'message' and 'text' in event.data
+        return event.data['type'] == 'message'
     def on_event(self, event):
-        text = event.data['text']
         if not 'subtype' in event.data:
-            message = self.on_chat(event, text)
-            if message:
-                self.last_post = event.post_message(message)
+            if 'text' in event.data:
+                text = event.data['text']
+                message = self.on_chat(event, text)
+                if message:
+                    self.last_post = event.post_message(message)
+        else:
+            if event.data['subtype'] == 'message_changed':
+                text = event.data['message']['text']
+                message = self.on_edit(event, text)
+                if message:
+                    self.last_post = event.post_message(message)
     def on_chat(self, event, text):
+        return None
+    def on_edit(self, event, text):
         return None
 
 class SimpleMessageHandler(MessageHandler):
-    def __init__(self, regex_str, callback):
+    def __init__(self, regex_str, chat_callback=None, edit_callback=None):
         MessageHandler.__init__(self)
         self.matcher = re.compile(regex_str)
-        self.callback = callback
+        self.chat_callback = chat_callback
+        self.edit_callback = edit_callback
     def accept(self, event):
-        return MessageHandler.accept(self, event) and self.matcher.search(event.data['text'])
+        if MessageHandler.accept(self, event):
+            if 'text' in event.data and self.matcher.search(event.data['text']):
+                return True
+            elif 'message' in event.data and self.matcher.search(event.data['message']['text']):
+                return True
+        return False
     def on_chat(self, event, text):
-        return self.callback(event, event.data['text'])
+        return self.chat_callback(handler=self, event=event, text=text)
+    def on_edit(self, event, text):
+        return self.edit_callback(handler=self, event=event, text=text)

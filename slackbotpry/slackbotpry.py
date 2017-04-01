@@ -32,11 +32,14 @@ def main():
     api_token = argument.APITOKEN
     mybot = bot.Bot(api_token, argument.channel)
     from eventhandler import SimpleMessageHandler
-    def callback(event, text):
+    def chat_callback(**kw):
         return 'Hi!'
+    def edit_callback(handler, event, text):
+        if handler.last_post:
+            event.bot.edit_message(text, handler.last_post)
     mybot.post_message('Hi')
-    mybot.add_eventhandler(SimpleMessageHandler(r'^Hello$', callback))
-    mybot.add_eventhandler(SimpleMessageHandler(r'^good$', (lambda event, text: event.add_reaction('+1'))))
+    mybot.add_eventhandler(SimpleMessageHandler(r'^Hello', chat_callback, edit_callback))
+    mybot.add_eventhandler(SimpleMessageHandler(r'^good$', lambda event, **kw: event.add_reaction('+1')))
     mybot.mainloop()
 if __name__ == "__main__":
     main()
