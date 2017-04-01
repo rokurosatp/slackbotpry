@@ -39,7 +39,7 @@ class Bot:
         for handler in self.handlers:
             handler.event_queue.join()
     def on_event(self, event):
-        if 'bot_id' in event.data:
+        if 'bot_id' in event.data or 'message' in event.data and 'bot_id' in event.data['message']:
             return
         for handler in self.handlers:
             handler.put_event(event)
