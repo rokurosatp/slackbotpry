@@ -28,18 +28,24 @@ class EventHandler:
 class MessageHandler(EventHandler):
     def __init__(self):
         EventHandler.__init__(self)
+        self.last_post = None
     def accept(self, event):
         return event.data['type'] == 'message' and 'text' in event.data
+    def on_event(self, event):
+        text = event.data['text']
+        if not 'subtype' in event.data:
+            message = self.on_chat(event, text)
+            if message:
+                self.last_post = event.post_message(message)
+    def on_chat(self, event, text):
+        return None
 
 class SimpleMessageHandler(MessageHandler):
     def __init__(self, regex_str, callback):
         MessageHandler.__init__(self)
         self.matcher = re.compile(regex_str)
         self.callback = callback
-        self.last_post = None
     def accept(self, event):
         return MessageHandler.accept(self, event) and self.matcher.search(event.data['text'])
-    def on_event(self, event):
-        message = self.callback(event, event.data['text'])
-        if message:
-            self.last_post = event.post_message(message)
+    def on_chat(self, event, text):
+        return self.callback(event, event.data['text'])
