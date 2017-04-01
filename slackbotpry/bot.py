@@ -62,6 +62,9 @@ class Bot:
             channel = self.cur_channel
         result = self.api.api_call('chat.postMessage', text=text, link_names=True, channel=channel, as_user=True)
         return result
+    def edit_message(self, message, post_event):
+        result = self.api.api_call('chat.update', text=message, channel=post_event['channel'], ts=post_event['ts'])
+        return result
     def add_reaction(self, emoji, channel, timestamp):
         result = self.api.api_call('reactions.add', name=emoji, channel=channel, timestamp=timestamp)
         return result
