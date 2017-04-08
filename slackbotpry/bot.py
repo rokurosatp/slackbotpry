@@ -4,6 +4,7 @@ import eventpool
 from event import Event
 from websocket import WebSocketConnectionClosedException
 
+
 class Bot:
     def __init__(self, api_token, default_channel='random'):
         self.api = SlackClient(token=api_token)
@@ -13,9 +14,11 @@ class Bot:
         self.user_dm = ''
         self.handlers = []
         self.pool = eventpool.EventPool()
+
     def add_eventhandler(self, handler):
         self.handlers.append(handler)
         handler.start()
+
     def mainloop(self):
         while True:
             try:
@@ -38,6 +41,7 @@ class Bot:
                 break
         for handler in self.handlers:
             handler.event_queue.join()
+
     def on_event(self, event):
         if 'bot_id' in event.data or 'message' in event.data and 'bot_id' in event.data['message']:
             return
@@ -46,6 +50,7 @@ class Bot:
 #            if handler.accept(event):
 #                record = eventpool.EventPoolRecord(handler, event)
 #                self.pool.register(record)
+
     def post_message(self, message, channel=None, dest_user=None):
         """Post a Message
         Description:
@@ -60,14 +65,21 @@ class Bot:
             text = '@{0} {1}'.format(dest_user, message)
         if channel is None:
             channel = self.cur_channel
-        result = self.api.api_call('chat.postMessage', text=text, link_names=True, channel=channel, as_user=True)
+        result = self.api.api_call(
+            'chat.postMessage', text=text, link_names=True, channel=channel, as_user=True)
         return result
+
     def edit_message(self, message, post_event):
-        result = self.api.api_call('chat.update', text=message, channel=post_event['channel'], ts=post_event['ts'])
+        result = self.api.api_call(
+            'chat.update', text=message, channel=post_event['channel'], ts=post_event['ts'])
         return result
+
     def add_reaction(self, emoji, channel, timestamp):
-        result = self.api.api_call('reactions.add', name=emoji, channel=channel, timestamp=timestamp)
+        result = self.api.api_call(
+            'reactions.add', name=emoji, channel=channel, timestamp=timestamp)
         return result
+
     def remove_reaction(self, emoji, channel, timestamp):
-        result = self.api.api_call('reactions.remove', name=emoji, channel=channel, timestamp=timestamp)
+        result = self.api.api_call(
+            'reactions.remove', name=emoji, channel=channel, timestamp=timestamp)
         return result
