@@ -39,7 +39,7 @@ def main():
             event.bot.edit_message(text, handler.last_post)
     mybot.post_message('Hi')
     mybot.add_eventhandler(SimpleMessageHandler(r'^Hello', chat_callback, edit_callback))
-    mybot.add_eventhandler(SimpleMessageHandler(r'^good$', lambda event, **kw: event.add_reaction('+1') and None))
+    mybot.add_eventhandler(SimpleMessageHandler(r'^good$', lambda event, **kw: event.add_reaction('+1')))
     mybot.mainloop()
 if __name__ == "__main__":
     main()

@@ -39,21 +39,21 @@ class MessageHandler(EventHandler):
 
     def accept(self, event):
         return event.data['type'] == 'message'
-
+    
     def on_event(self, event):
         if not 'subtype' in event.data:
             if 'text' in event.data:
                 text = event.data['text']
-                message = self.on_chat(event, text)
-                if message:
-                    self.last_post = event.post_message(message)
+                result = self.on_chat(event, text)
+                if isinstance(result, dict) and 'message' in result:
+                    # Messageに種類あるのかわからないけど確認
+                    if result['message']['type'] == 'message':
+                        self.last_post = result
         else:
             if event.data['subtype'] == 'message_changed':
                 text = event.data['message']['text']
-                message = self.on_edit(event, text)
-                if message:
-                    self.last_post = event.post_message(message)
-
+                result = self.on_edit(event, text)
+                
     def on_chat(self, event, text):
         return None
 
@@ -77,7 +77,10 @@ class SimpleMessageHandler(MessageHandler):
         return False
 
     def on_chat(self, event, text):
-        return self.chat_callback(handler=self, event=event, text=text)
-
+        message = self.chat_callback(handler=self, event=event, text=text)
+        if isinstance(message, str):
+            return event.post_message(message)
+        else:
+            return message
     def on_edit(self, event, text):
         return self.edit_callback(handler=self, event=event, text=text)
