@@ -5,6 +5,8 @@ import re
 
 
 class EventHandler:
+    """Base class of Event Handler Object
+    """
     def __init__(self):
         self.inner_thread = None
         self.event_queue = Queue()
@@ -26,6 +28,12 @@ class EventHandler:
             self.event_queue.put(event)
 
     def accept(self, event):
+        """choose event to handle
+        Summary:
+            Handler selects handled event by implementing this method
+        Returns:
+            If the handler will handle message True, other False
+        """
         raise NotImplementedError()
 
     def on_event(self, event):
@@ -33,6 +41,11 @@ class EventHandler:
 
 
 class MessageHandler(EventHandler):
+    """Base class of Message Handler Object
+    Description:
+        The handler is customized by implementing on_chat and on_edit handler.
+        If you would like handler simply reply to patterned message, use SimpleMessageHandler.
+    """
     def __init__(self):
         EventHandler.__init__(self)
         self.last_post = None
@@ -55,13 +68,48 @@ class MessageHandler(EventHandler):
                 result = self.on_edit(event, text)
                 
     def on_chat(self, event, text):
+        """Handling post message event on pattern (or filter funciton) matched message
+        Descripton:
+            This Method is implemented on interited class.
+            In MessageHandlerClass only returns None.
+        Examples: This implementated method repeats user posted text
+            def on_chat(self, event, text):
+                event.post_message(text)
+        Args:
+            event (Event): Detected Event object
+            text (str): posted chat message.
+        """
         return None
 
     def on_edit(self, event, text):
+        """Handling message edited event
+        Descripton:
+            This Method is implemented on interited class.
+            In MessageHandlerClass only returns None.
+        Args:
+            event (Event): Detected Event object
+            text (str): Edited chat message text.
+        Returns:
+            The Result of api_call result Handling process
+        Examples: This implementated method changes the last post of bot into text of user edited message
+            def on_edit(self, event, text):
+                return event.edit_message(text, self.last_post):
+        """
         return None
 
-
 class SimpleMessageHandler(MessageHandler):
+    """Simple Message Handler Class.
+    Arguments:
+        regex_str (str): match pattern of post message process by handler
+        chat_callback (function):
+            function to handle on_chat (function signature is def func(**kwargs)->[dict, str, or None])
+            kwargs corresponds arguments of on_chat method of MessageHandler.
+            return value is same as on_chat method.
+        edit_callback (function):
+            function to handle on_edit (function signature is def func(**kwargs)->[dict, str, or None])
+            kwargs corresponds arguments of on_chat method of MessageHandler.
+            return value is same as on_chat method.
+    """
     def __init__(self, regex_str, chat_callback=None, edit_callback=None):
         MessageHandler.__init__(self)
         self.matcher = re.compile(regex_str)
