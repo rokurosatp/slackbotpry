@@ -1,7 +1,7 @@
 from slackclient import SlackClient
 from time import sleep
-import eventpool
-from event import Event
+from . import eventpool
+from .event import Event
 from websocket import WebSocketConnectionClosedException
 
 
