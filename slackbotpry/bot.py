@@ -25,6 +25,7 @@ class Bot:
         self.user_dm = ''
         self.handlers = []
         self.pool = eventpool.EventPool()
+        self.exit_flag = False
 
     def add_eventhandler(self, handler):
         """Add Event Handler.
@@ -37,7 +38,7 @@ class Bot:
     def mainloop(self):
         """do mainloop
         """
-        while True:
+        while not self.exit_flag:
             try:
                 if self.api.rtm_connect():
                     print('connected.')
@@ -56,8 +57,9 @@ class Bot:
             except KeyboardInterrupt:
                 print('shutting down')
                 break
-        for handler in self.handlers:
-            handler.event_queue.join()
+#        for handler in self.handlers:
+#            handler.event_queue.join()
+        sleep(3)
 
     def on_event(self, event):
         if 'bot_id' in event.data or 'message' in event.data and 'bot_id' in event.data['message']:
