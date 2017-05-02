@@ -61,6 +61,9 @@ class Bot:
 #            handler.event_queue.join()
         sleep(3)
 
+    def shutdown(self):
+        self.exit_flag = True
+
     def on_event(self, event):
         if 'bot_id' in event.data or 'message' in event.data and 'bot_id' in event.data['message']:
             return
