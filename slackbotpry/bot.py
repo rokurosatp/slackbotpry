@@ -122,3 +122,7 @@ class Bot:
         result = self.api.api_call(
             'reactions.remove', name=emoji, channel=channel, timestamp=timestamp)
         return result
+
+    def upload_file(self, path, channel):
+        with open(path, 'rb') as f:
+            self.api.api_call('files.upload', file=f, channels=channel)
