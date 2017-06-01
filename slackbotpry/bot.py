@@ -45,7 +45,8 @@ class Bot:
                     while True:
                         data_list = self.api.rtm_read()
                         for data in data_list:
-                            self.on_event(Event(self, data))
+                            if data:
+                                self.on_event(Event(self, data))
 #                        self.pool.check_queue()
                         sleep(1)
                 else:
