@@ -52,7 +52,7 @@ class Bot:
                 else:
                     print('connection failed.')
                     sleep(10)
-            except (WebSocketConnectionClosedException, TimeoutError):
+            except (WebSocketConnectionClosedException, ConnectionResetError, TimeoutError):
                 print('reconnecting...')
                 continue
             except KeyboardInterrupt:
