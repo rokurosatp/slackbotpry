@@ -57,10 +57,10 @@ class Bot:
             except (WebSocketConnectionClosedException, ConnectionResetError, TimeoutError):
                 print('reconnecting...')
                 continue
-            except Exception as exc:
-                traceback.print_last()
-                print('connecttion was lost by former unhandled exception')
-                print('Exception: {0} "{1}"'.format(type(exc).__name__, exc))
+            except Exception:
+                exc_type, exc_value, exc_traceback = sys.exc_info()
+                traceback.print_exception(exc_type, exc_value, exc_traceback)
+                print('connecttion was lost by above unhandled exception')
                 print('reconnecting...')
                 continue
             except KeyboardInterrupt:
