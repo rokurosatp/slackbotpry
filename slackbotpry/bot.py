@@ -23,7 +23,6 @@ class Bot:
         self.owner = ''
         self.user_dm = ''
         self.handlers = []
-        self.pool = eventpool.EventPool()
         self.exit_flag = False
 
     def add_eventhandler(self, handler):
