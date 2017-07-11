@@ -56,6 +56,10 @@ class Bot:
             except KeyboardInterrupt:
                 print('shutting down')
                 break
+            except Exception as e:
+                print(e.args)
+                sleep(30)
+                continue
 #        for handler in self.handlers:
 #            handler.event_queue.join()
         sleep(3)
