@@ -1,3 +1,5 @@
+import traceback
+import sys
 from slackclient import SlackClient
 from time import sleep
 from .event import Event
@@ -51,11 +53,16 @@ class Bot:
                     print('connection failed.')
                     sleep(10)
             except (WebSocketConnectionClosedException, ConnectionResetError, TimeoutError):
-                print('reconnecting...')
-                continue
+                pass
+            except Exception:
+                exc_type, exc_value, exc_traceback = sys.exc_info()
+                traceback.print_exception(exc_type, exc_value, exc_traceback)
+                print('connecttion was lost by above unhandled exception')
             except KeyboardInterrupt:
                 print('shutting down')
                 break
+            sleep(30)
+            print('reconnecting...')
 #        for handler in self.handlers:
 #            handler.event_queue.join()
         sleep(3)
