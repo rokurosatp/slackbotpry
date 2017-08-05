@@ -42,7 +42,7 @@ class Bot:
             try:
                 if self.api.rtm_connect():
                     print('connected.')
-                    while True:
+                    while not self.exit_flag:
                         data_list = self.api.rtm_read()
                         for data in data_list:
                             if data:
