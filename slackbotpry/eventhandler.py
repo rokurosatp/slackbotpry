@@ -52,11 +52,17 @@ class MessageHandler(EventHandler):
 
     def accept(self, event):
         return event.data['type'] == 'message'
-    
+      
+    erase_chars = "<>"
+    def __to_plane__(self, text: str):
+        for c in MessageHandler.erase_chars:
+            text = text.replace(c, "")
+        return text
+
     def on_event(self, event):
         if not 'subtype' in event.data:
             if 'text' in event.data:
-                text = event.data['text']
+                text = self.__to_plane__(event.data['text'])
                 result = self.on_chat(event, text)
                 if isinstance(result, dict) and 'message' in result:
                     # Messageに種類あるのかわからないけど確認
@@ -64,7 +70,7 @@ class MessageHandler(EventHandler):
                         self.last_post = result
         else:
             if event.data['subtype'] == 'message_changed':
-                text = event.data['message']['text']
+                text = self.__to_plane__(event.data['message']['text'])
                 result = self.on_edit(event, text)
                 
     def on_chat(self, event, text):
